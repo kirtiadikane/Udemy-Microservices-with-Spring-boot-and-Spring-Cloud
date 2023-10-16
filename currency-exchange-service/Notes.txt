@@ -1,5 +1,32 @@
-Currency exchange service
+* Currency exchange service
 http://localhost:8000/currency-exchange/from/USD/to/INR
+Response: {
+"id": 1000,
+"from": "USD",
+"to": "INR",
+"conversionMultiple": 50,
+"environment": "8000"
+}
 
-Currency conversion service
+---------------------------------------------------------------------------
+
+* New instance using port 8001
+Run as configuration:
+Set Name: CurrencyExchangeServiceApplication8001
+
+Arguments: VM Arguments->   -Dserver.port=8001
+Click Apply
+
+http://localhost:8001/currency-exchange/from/USD/to/INR
+Response: {
+"id": 1000,
+"from": "USD",
+"to": "INR",
+"conversionMultiple": 50,
+"environment": "8001"
+}
+
+---------------------------------------------------------------------------
+
+* Currency conversion service
 http://localhost:8000/currency-exchange/from/USD/to/INR/qauntity/10
