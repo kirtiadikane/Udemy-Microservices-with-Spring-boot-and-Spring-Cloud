@@ -4,3 +4,6 @@ Configuring Profiles for Limits Service
 http://localhost:8888/limits-service/default
 http://localhost:8888/limits-service/dev
 http://localhost:8888/limits-service/qa
+
+Created new file microservice-x.properties in local git repo
+http://localhost:8888/microservice/x
