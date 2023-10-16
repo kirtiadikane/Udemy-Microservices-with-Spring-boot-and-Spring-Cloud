@@ -5,5 +5,5 @@ http://localhost:8080/limits
 
 Set the following in application.properties, 
 spring.application.name=limits-service
-Then it will take the minimum and maximum limits from the limits-service.properties file(created in the local git repo) 
+Then it will take all the fields from the limits-service.properties file(created in the local git repo) 
 which is given in the spring-cloud-config-server application.properties.
