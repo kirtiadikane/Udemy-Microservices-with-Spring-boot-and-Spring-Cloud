@@ -12,15 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class CurrencyExchangeController {
 
 	@Autowired
+	private CurrencyExchangeRepository currencyExchangeRepository;
+	
+	@Autowired
 	private Environment environment;
 
 	@GetMapping("/currency-exchange/from/{from}/to/{to}")
 	public CurrencyExchange retrieveExchangeValue(@PathVariable String from,
 			@PathVariable String to) {
-		CurrencyExchange currencyExchange = new CurrencyExchange(1000l, from, to, BigDecimal.valueOf(50));
+		//CurrencyExchange currencyExchange = new CurrencyExchange(1000l, from, to, BigDecimal.valueOf(50));
+		CurrencyExchange currencyExchange = currencyExchangeRepository.findByFromAndTo(from, to);
+		
+		if(currencyExchange == null)
+			throw new RuntimeException("Unable to find data for " + from + " to " + to );
+		
 		String port = environment.getProperty("local.server.port");
 		currencyExchange.setEnvironment(port);
 		return currencyExchange;		
 	}
+	
 	
 }

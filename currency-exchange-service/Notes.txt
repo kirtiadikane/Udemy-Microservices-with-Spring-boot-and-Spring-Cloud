@@ -31,3 +31,11 @@ Response: {
 
 * Currency conversion service
 http://localhost:8000/currency-exchange/from/USD/to/INR/qauntity/10
+
+
+---------------------------------------------------------------------------
+*Step 14: Creating a JPA Repository
+
+http://localhost:8000/currency-exchange/from/USD/to/INR
+http://localhost:8000/currency-exchange/from/EUR/to/INR
+http://localhost:8000/currency-exchange/from/AUD/to/INR
