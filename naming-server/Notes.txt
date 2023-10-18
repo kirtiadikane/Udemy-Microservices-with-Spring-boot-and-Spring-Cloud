@@ -1,0 +1,9 @@
+Step 19 - Understand Naming Server and Setting up Eureka Naming Server
+-------------------------------------------------------------------------
+What would happen is in a microservice architecture, all the instances of all the microservices would register with a service registry. So the currency-conversion and
+currency-exchange microservice would register with the service registry, and all the other microservices also would register with the service registry.
+And let's say the currency-conversion microservice wants to talk to the currency-exchange microservice, it would ask the service registry, "Hey, what are the addresses
+of the currency-exchange microservice?" The service registry would return those back to the currency-conversion microservice, and then the currency-conversion microservice
+can send the request out to the currency exchange microservice.
+So all the instances would register with the naming server or the service registry. And whenever currency-conversion microservice wants to find out what are the active 
+instances, it asks the naming server, gets the instances and load balances between them.

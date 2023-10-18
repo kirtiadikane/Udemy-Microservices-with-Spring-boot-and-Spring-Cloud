@@ -14,7 +14,7 @@ Response Structure
   "totalCalculatedAmount": 650.00,
   "environment": "8000 rest template"
 }
--------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
 
 Step 18 - Using Feign REST Client for Service Invocation
@@ -25,6 +25,7 @@ microservices. They'd be calling each other, and you need to repeat this kind of
 called Feign, F E I G N. Feign makes it really easy to call other microservices.
 And to make use of Feign, we need to add a specific dependency into our currency conversion service.
 
+Feign also helps us to do load balancing very easily.
 URL->    http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantity/10
 
 {
@@ -36,3 +37,4 @@ URL->    http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantit
 "totalCalculatedAmount": 650,
 "environment": "8000 feign"
 }
+
