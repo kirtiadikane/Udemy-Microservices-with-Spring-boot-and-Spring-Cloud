@@ -12,7 +12,7 @@ Response Structure
   "conversionMultiple": 65.00,
   "quantity": 10,
   "totalCalculatedAmount": 650.00,
-  "environment": "8000 instance-id"
+  "environment": "8000 rest template"
 }
 -------------------------------------------------------------------------
 
@@ -24,3 +24,15 @@ To make a simple rest API call, we need to write about 20 lines of code. And ima
 microservices. They'd be calling each other, and you need to repeat this kind of code everywhere. And that's where Spring Cloud provides you with a framework 
 called Feign, F E I G N. Feign makes it really easy to call other microservices.
 And to make use of Feign, we need to add a specific dependency into our currency conversion service.
+
+URL->    http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantity/10
+
+{
+"id": 10001,
+"from": "USD",
+"to": "INR",
+"quantity": 10,
+"conversionMultiple": 65,
+"totalCalculatedAmount": 650,
+"environment": "8000 feign"
+}
