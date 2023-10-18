@@ -11,3 +11,5 @@ instances, it asks the naming server, gets the instances and load balances betwe
 
 URL to access Eureka server dashboard- 
 http://localhost:8761/
+
+

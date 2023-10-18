@@ -38,3 +38,31 @@ URL->    http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantit
 "environment": "8000 feign"
 }
 
+
+
+Step 22 - Load Balancing with Eureka, Feign & Spring Cloud LoadBalancer 
+-------------------------------------------------------------------------
+And now what I would want to do is to go to the currency exchange proxy and all that I would need to do to make it load balance between multiple instances is actually
+come in this (interface CurrencyExchangeProxy ) and actually add a new line with just the name @FeignClient(name="currency-exchange")
+So what we want to do is we want the Feign client to talk to Eureka and pick up the instances of currency exchange and do load balancing between them.
+All that magic would happen just by removing this URL url="localhost:8000"
+So now we don't have a specific instance configured for the currency exchange.
+Let's go to currency conversion Feign API (http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantity/10) and refresh.
+The application is still working as is. There's no problem. What I would do is I'll launch up the application on port 8,001 as well.
+So I'll launch up currency exchange service application on port 8,001 as well.
+Let's do that. The application is now starting up. When it starts up, what would happen? It would resist with Eureka So it's registering with Eureka. And if you go over 
+to Eureka(http://localhost:8761) and refresh, how many instances of currency exchange are up and running right now? You can see that there are two instances of currency 
+exchange have been running 8,000 and 8,001. And if I go and execute the Feign URL again (http://localhost:8100/currency-conversion-feign/from/USD/to/INR/quantity/10), refresh.
+This is coming back from 8,001, refresh 8,000, refresh 8,001, 8,000.
+then you'd see that it's automatically load balancing between these two things. So what is happening in here is inside the currency conversion microservice there is load 
+balancer component which is talking to the naming server, finding the instances and doing automatic load balancing between them. And this is what is called client side load balancing.
+And this is happening through Feign. And how does Feign do load balancing? If you actually go into our currency conversion service pom.xml,
+if you look at the dependency hierarchy (spring-cloud-starter-netflix-eureka-client), which is present in here and just type in load, L-O-A-D, standing for load balancer,
+you'd see that there is a load balancer spring cloud started load balancer which is brought into the class path by spring-Cloud-start-up-Netflix-Eureka-client. And this is 
+the load balancer framework that is used by Feign to actually distribute the load among the multiple instances which are returned by Eureka. In the earlier versions of Spring Cloud
+the load balancer which was used was Ribbon and in the recent versions, spring cloud shifted to using spring cloud load balancer as the load balancer. The great thing is if 
+you're using Eureka and Feign then load balancing comes for free. This is client site load balancing and this comes for free for you.
+
+What I would recommend you to do is to stop certain instances of currency exchange and start new instances. You would see that typically within 15 to 30 seconds all the
+changes are reflected and the load balancing will be done between all the available active instances at that particular point in time. So what we are creating in here is a 
+very dynamic structure.
