@@ -9,6 +9,7 @@ Response: {
 }
 
 ---------------------------------------------------------------------------
+Setting up Dynamic Post in the Response:
 
 * New instance using port 8001
 Run as configuration:
