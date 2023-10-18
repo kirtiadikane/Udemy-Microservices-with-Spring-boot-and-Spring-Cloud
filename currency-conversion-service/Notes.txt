@@ -1,7 +1,8 @@
+Step 17 - Invoking currency-exchange from currency-conversion microservice
+
 URL and Response Structure for Currency Conversion Service
 -------------------------------------------------------------------------
-URL
-http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/10
+URL->    http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/10
 
 Response Structure
 {
@@ -13,3 +14,13 @@ Response Structure
   "totalCalculatedAmount": 650.00,
   "environment": "8000 instance-id"
 }
+-------------------------------------------------------------------------
+
+
+Step 18 - Using Feign REST Client for Service Invocation
+-------------------------------------------------------------------------
+In the last step, we had to write a lot of tedious code around rest template to get the currency conversion service to talk with the currency exchange microservice.
+To make a simple rest API call, we need to write about 20 lines of code. And imagine what would happen if, in a microservices architecture, you have hundreds of 
+microservices. They'd be calling each other, and you need to repeat this kind of code everywhere. And that's where Spring Cloud provides you with a framework 
+called Feign, F E I G N. Feign makes it really easy to call other microservices.
+And to make use of Feign, we need to add a specific dependency into our currency conversion service.

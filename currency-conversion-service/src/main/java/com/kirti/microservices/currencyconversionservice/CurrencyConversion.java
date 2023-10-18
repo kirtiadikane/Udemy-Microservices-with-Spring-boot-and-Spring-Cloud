@@ -1,4 +1,4 @@
-package com.kirti.microservice.currencyconversionservice;
+package com.kirti.microservices.currencyconversionservice;
 
 import java.math.BigDecimal;
 
