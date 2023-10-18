@@ -40,7 +40,6 @@ public class CurrencyConversionController {
 	public CurrencyConversion calculateCurrencyConversionFeign(@PathVariable String from, 
 			@PathVariable String to, @PathVariable BigDecimal quantity) {
 		
-		
 		CurrencyConversion currencyConversion = currencyExchangeProxy.retrieveExchangeValue(from, to);
 		
 		return new CurrencyConversion(currencyConversion.getId(), 
