@@ -69,4 +69,22 @@ recommended circuit breaker framework. However, with the evolution of Java eight
 You can integrate Resilience4j with Spring Boot, the first thing that we need to do is to add the dependencies on Resilience4j Spring Boot 2, Spring Boot starter actuator and Spring Boot starter AOP.
 
 
-resilience4j.retry.instances.sample-api.maxAttempts=5
+------------------------------------------------------------------------------------------------------
+Step 28 - Playing with Circuit Breaker Features of Resilience4j
+
+A circuit breaker can be in three different states, closed, open, and half open.
+What are the different states?
+Closed is when I am calling the dependent microservice continuously. So in a closed state I'll always be calling the dependent microservice.
+In a open state, the circuit breaker will not call the dependent microservice. It'll directly return the fallback response.
+And in a half open state, a circuit secure breaker would be sending a percentage of requests to the dependent microservice,
+and for rest of the requests, it would return the hard coded response or the fallback response back.
+
+When does the circuit secure breaker switch from one state to another?
+For example, the circuit breaker is in the closed state. When you start the application up the circuit breaker is typically in a closed state. Let's say I'm calling the dependent microservice
+10,000 times and I see that all of them are failing or I see that 90% of them are failing. In that kind of scenario, the circuit breaker would switch to a open state. Once it switches through 
+an open state it waits for a little while. It, there's a wait duration that you can configure. After that wait duration the circuit breaker would switch to a half open state. During the half 
+open state. The circuit breaker would try and see if the dependent microservice is up. So it sends a percentage of the request. You can configure how much percentage. It would send let's say 
+10% or 20% of the request to the dependent microservice. And if it gets proper responses for that then it would go back to the closed state. If it does not get proper responses, then it would 
+go back to the open state.
+
+documentation- https://resilience4j.readme.io/docs/circuitbreaker
