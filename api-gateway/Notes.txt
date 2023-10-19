@@ -37,8 +37,36 @@ Custom Routes
 
 
 ------------------------------------------------------------------------------------------------------
+Step 25 - Implementing Spring Cloud Gateway Logging Filter
 Spring Cloud gateway is an awesome way to route to your APIs and implement your crosscutting concerns. Things like security, monitoring, metrics, 
 these are the best things that you can implement in a Spring Cloud gateway. This is built on top of Spring WebFlux, and that's the reason why we needed to use the reactive approach.
 Some of the important features of Spring Cloud Gateway are it can match request on any request attribute.
 
 
+------------------------------------------------------------------------------------------------------
+Step 26 - Getting started with Circuit Breaker - Resilience4j
+
+we have talked about the fact that in a microservices architecture there is a complex call chain. As shown in the example here, a microservice can call another microservice.
+That microservice might be dependent on another microservice and so on and so forth. And what would happen if one of these services is down or is very slow? Let's say microservice 
+four is down or it's very, very slow. What would happen? There would be an impact on the entire chain. If the microservice four is down, then microservice three also will be down,
+microservice two also will be down, because these are all depending on microservice 4. Even if it's slow, then there is a corresponding impact on the other microservices too. In 
+these microservices, there will be a buildup of calls because this microservice is slow. All these chains also get impacted.
+So the questions are, can we return a fallback response if a service is down?
+If I see that the microservice four is down, in the microservice three, can I return a fallback response? Can I configure a default response? This might not always be possible.
+For example, in the case of a credit card transaction, or something of that kind, you do not have any fallback responses possible. But in the case of a shopping application, instead 
+of returning a set of products you might return a default set of products. That's possible. The other question to consider is can we implement a circuit breaker pattern to reduce 
+the load? If I see that microservice four is down, instead of repeatedly hitting it and causing it to go down, can I actually return the default response back without even hitting
+the microservice? 
+
+The other question to consider is, can we retry requests in case of temporary failures? If there is a temporary failure from a microservice four, can I retry it a few times
+and only when it has failed multiple times, I return a default response back.
+The last question is, can we implement something like rate limiting?
+I want to allow only certain number of calls to a specific microservice in a specific period of time.
+If you're using Spring Boot, then there is a circuit breaker framework which is available, which is called Resilience4j.
+Resilience4j is a lightweight, easy to use, fault tolerant library inspired by Netflix Hystrix. In the previous versions of Spring Boot and Spring Cloud, Netflix Hystrix was the 
+recommended circuit breaker framework. However, with the evolution of Java eight and functional programming, Resilience4j has become the recommended framework.
+
+You can integrate Resilience4j with Spring Boot, the first thing that we need to do is to add the dependencies on Resilience4j Spring Boot 2, Spring Boot starter actuator and Spring Boot starter AOP.
+
+
+resilience4j.retry.instances.sample-api.maxAttempts=5
