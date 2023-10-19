@@ -27,11 +27,6 @@ Response: {
 "environment": "8001"
 }
 
----------------------------------------------------------------------------
-
-* Currency conversion service
-http://localhost:8000/currency-exchange/from/USD/to/INR/qauntity/10
-
 
 ---------------------------------------------------------------------------
 *Step 14: Creating a JPA Repository
