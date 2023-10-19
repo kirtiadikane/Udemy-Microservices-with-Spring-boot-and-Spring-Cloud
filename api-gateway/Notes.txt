@@ -36,4 +36,9 @@ Custom Routes
 - http://localhost:8765/currency-conversion-feign-new/from/USD/to/INR/quantity/10
 
 
+------------------------------------------------------------------------------------------------------
+Spring Cloud gateway is an awesome way to route to your APIs and implement your crosscutting concerns. Things like security, monitoring, metrics, 
+these are the best things that you can implement in a Spring Cloud gateway. This is built on top of Spring WebFlux, and that's the reason why we needed to use the reactive approach.
+Some of the important features of Spring Cloud Gateway are it can match request on any request attribute.
+
 
