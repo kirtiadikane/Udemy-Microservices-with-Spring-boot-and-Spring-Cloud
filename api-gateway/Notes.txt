@@ -19,6 +19,11 @@ Lower Case
 - http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/10
 
 
+************************************************************
+Step 24: Exploring Routes with Spring Cloud Gateway
+------------------------------------------------------------
+http://localhost:8765/get
+
 
 Custom Routes
 
@@ -28,7 +33,7 @@ Custom Routes
 
 - http://localhost:8765/currency-conversion-feign/from/USD/to/INR/quantity/10
 
-- http://localhost:8765/currency-conversion-new/from/USD/to/INR/quantity/10
+- http://localhost:8765/currency-conversion-feign-new/from/USD/to/INR/quantity/10
 
 
 
