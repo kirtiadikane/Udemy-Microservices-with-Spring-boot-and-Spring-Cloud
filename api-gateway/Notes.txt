@@ -88,3 +88,25 @@ open state. The circuit breaker would try and see if the dependent microservice 
 go back to the open state.
 
 documentation- https://resilience4j.readme.io/docs/circuitbreaker
+
+
+
+------------------------------------------------------------------------------------------------------
+Section 7: Docker with Microservices using Spring Boot and Spring Cloud - V2
+------------------------------------------------------------------------------------------------------
+Step 00 - Match made in Heaven - Docker and Microservices
+
+We have talked about the fact that enterprises are heading towards microservices architectures. You're building a number of small microservices that communicate with each 
+other, and help you to achieve your required functionality. As part of our microservices architectures, we build a number of small focused microservices. One of the biggest 
+advantages of microservices, is the flexibility to innovate and build applications in different programming languages. You can build microservices using Java and Spring Boot, 
+as we are doing in this specific course. You can also build microservices using Go, Python, JavaScript, and a variety of other programming languages. But as we start exploring 
+the microservices architecture, and start implementing different languages, the deployments of these microservices become complex. Let's say the movie microservice and the 
+customer microservice are implemented in Java, and let's say the other ones are implemented in Python. You do not want different deployment procedures for each of these 
+microservice types. How can you get a common way to deploy multiple microservices irrespective of the language, or the framework that is used to build these microservices? 
+How can we get one way of deploying Go, Java, Python, or JavaScript microservices? That's where containers come into picture, and the most popular container tool is Docker. 
+What you can do is to create Docker images for each of these microservices. So for all the microservices that we looked over here, you can create Docker images. 
+The Docker image contains everything that a microservice needs to run. The Application Runtime, JDK, Python, or NodeJS. The application code for Java applications. It might 
+just be the JAR, your dependencies that you need to run the application. So, everything is part of your Docker image, and once you have this Docker image, you can run these 
+as docker containers the same way on any infrastructure. So you can run these Docker images on your local machine in a corporate data center, and also in the Cloud, whether 
+it's AWS, Azure, or Google Cloud. All of these support running docker containers in a wide variety of ways.
+
