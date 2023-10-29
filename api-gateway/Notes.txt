@@ -110,3 +110,363 @@ just be the JAR, your dependencies that you need to run the application. So, eve
 as docker containers the same way on any infrastructure. So you can run these Docker images on your local machine in a corporate data center, and also in the Cloud, whether 
 it's AWS, Azure, or Google Cloud. All of these support running docker containers in a wide variety of ways.
 
+
+------------------------------------------------------------------------------------------------------
+Step 02 - Your First Docker Usecase - Deploy a Spring Boot Application
+
+In this step, let's discuss a use case where Docker is most useful. You are working on a team, you are the star developer in the team. You're working on a challenging project 
+with very tight deadlines. You'd want a application deployed to an end environment quickly. You have a very good friend of yours working in the operations team, and you go to 
+him and tell, "Okay let's quickly deploy the application to the QA environment." And you tell him, "Okay, launch up terminal." He launches a terminal, on Windows you might be 
+using Command Prompt, so launch up either Terminal or Command Prompt and type this along with me. He says, "Okay, let's check if Docker is installed."
+docker--version.
+Type it in. Okay, Docker is installed.
+Now, let's run the application. Let's deploy the application. 
+
+Run this -> docker run in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+It says, "Okay, this is the command, go ahead and run it." You press Enter and you see that lot of magic unfolds, your friend from the operations team ask, "What's happening?"
+You tell him, "Okay, wait, hold on, let's see what would happen." And you'd see that right now it's downloading something, it's pulling something, it's "Downloaded a new image," 
+it says. And you are seeing now that a Spring Boot application is being launched up. And you'd see that in about 20 seconds, we are able to launch up a Spring Boot application. 
+Your operations team friend is stunned. He tells you, "Hey, on this machine, Java is not installed. How's it running?" Your friend in the operations team is actually working in 
+a few older projects. He's used to the manual approach. He usually gets a document that says, "Okay, you need this hardware and you'd want to install Linux XYZ version, and on 
+top of it, install Java 8.5.10, install Tomcat a.a.b and then download this JAR and then run it using this command." And what he tries to do typically, is try to follow these 
+instructions and install the application. And typically he makes a lot of mistakes. When I'm looking at a document, and trying to type it down a multiple set of instructions, 
+there's a high chance that I make a mistake while deploying something. He's asking you now, "How are we able to deploy this application that you have built so easily?" You tell 
+your friend, "Okay, that's the magic of Docker."
+
+
+
+------------------------------------------------------------------------------------------------------
+Step 03 - Docker Concepts - Registry, Repository, Tag, Image and Containers
+
+https://hub.docker.com/r/in28min/todo-rest-api-h2/tags
+Default Registry->    https://hub.docker.com/
+Repository-> in28min/todo-rest-api-h2
+Tags->  1.0.0.RELEASE
+
+Image - A static template - A set of bytes
+Container - Running version of image
+
+Image is like a Class. Container is like an object
+-p = port
+-p 5000:5000 => -p {HostPort}:{ContainerPort}
+
+docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE        => runs the docker image
+
+
+In the previous step, we were able to quickly launch up an application just running a simple instruction. And your friend from the operations team is very, very curious. He's asking, 
+Where is this application downloaded from? You have typed in something in here 
+in28min/todo-rest-api-h2
+What does this mean? What is this and where this coming in from? So let's answer some of the important questions in this specific step. Over here when we run this command what is 
+happening is an image is downloaded. From where? From something called hub.docker.com. Hub.docker.com is something called a docker registry. A registry contains a lot of repositories, 
+a lot of different versions of different applications. And because this is a public registry anybody can access this. Typically when you're working in an enterprise we would be 
+using private repositories so that our images can only be accessed by somebody who has the right credentials. If this is the registry where our application is, how do we locate 
+our application, right? 
+
+So over here you can type in https://hub.docker.com/r/in28min/todo-rest-api-h2/ If you type this in and press enter you would go to something called a repository. 
+So hub.docker.com is a registry. It can contain multiple repositories and inside that in28min/todo-rest-api-h2/ is a repository storing all diversions of a specific application. 
+So this is something that hosts a number of tags and we specified 1.0.0 release as the version that we would want to use. Now you might be wondering what does this image contain?  
+You'd see that this image is about 102 mb. This image actually contains all the things that your application needs to run. It contains the right software. For example, Java, 
+a specific version of Java Java eight or Java 11, whichever version you'd want to use. It contains all the libraries your API needs. Your todo-rest-API might need 15 libraries. 
+It contains all of them and it contains any other dependency that your application might need to be able to run. When we ran this command, this image was downloaded to our machine, 
+so a local image was created. So from the registry, the image is downloaded to our, your machine and once the image is downloaded, it is ran as an application in your machine. 
+And this is what is called a container image is something static. So on the repository image is a set of bytes, that's it. When it's downloaded even then the image is just a set 
+of bytes. And when it's running it's called a container. So image is a static version and container is a running version. And for the same image you can have multiple containers 
+running.  I see that the Springboot application is running but I would want to be able to access it. How can I do that? If you go further down you'd see that it's running on 
+port 5,000. Let's go and try to run it localhost:5000/hello-world-bean.
+Why is there error?
+Just press control C This would terminate the running container and let's do a clear and go up and try and run this command again. However, this time with option So we need to 
+put an option called 
+docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+any container that you run is part of something called a bridge network in Docker. You can kind of think of it like an internal docker network. Nobody will be able to access it 
+unless you specifically expose it onto the host onto the system where your container is running. So what we are doing in here is we are saying I want to take the internal port, 
+the container port 5,000 and map it to a host port to report on the system where the container is running which is 5,000. So now I would be able to access the application on 
+Port 5,000. You'd see that the application is launched up. 
+Yep, it took about 20 seconds.
+when we execute the command, the image is downloaded from something called docker hub. Docker hub is something called a docker registry. A registry contains a number of repositories 
+when we are specifying the name in here, it's actually name of one of the repositories and we are specifying which version, which tag of that repository to get. And once we specify 
+that, we saw that the image was downloaded and running. The running version of the image is called a container. A image is a static version and the running dynamic version of it is 
+called a container. And at the end we also saw that we had to publish the container port to a host port to be able to access the application.
+docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+
+docker logs container_id   = shows all the logs of the application
+
+docker logs -f container_id   = starts following the logs of the application
+
+docker container ls  = lists all the running container
+CONTAINER ID    IMAGE       COMMAND      CREATED        STATUS    POSTS    NAMES
+
+We can run multiple containers from the same image
+-d = detach
+1st container localhost:5000/hello-world 
+docker run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+2nd container localhost:5001/hello-world
+docker run -p 5001:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+docker container ls -a  = lists the all the containers irrespective of the STATUS (Up or Exited)
+
+docker container stop container_id   = stops the container
+
+docker images   = shows the docker images that are local to us. The images which have been pulled from the docker registry.
+REPOSITORY    TAG     IMAGE ID   CREATED    SIZE
+
+docker container stop container_id = stops the container
+
+
+------------------------------------------------------------------------------------------------------
+Step 05 - Understanding Docker Architecture - Docker Client, Docker Engine
+The Architecture of Docker.
+
+The place we were running the commands in is called a Docker client and when we type something in the Docker client, the command is sent out to something called a 
+Docker Daemon or a Docker engine for execution. So even the local installation of Docker uses a client server kind of architecture. So when you install Docker desktop 
+we were installing both the Docker client and the Docker Daemon. The Docker Daemon is responsible for managing the containers. It's responsible for managing the local 
+images and it is responsible for pulling something from the image registry if you need it or pushing a locally created image to a image registry.
+The first two parts of that is very easy, right? Docker Daemon is responsible for managing our local containers and local images.
+All the local containers are managed by the Docker Daemon or the Docker engine, which is running on our local machine.
+The Docker Daemon also manages the images which were downloaded. The Docker Daemon knows that there is a local image for the specific repository and the specific tag.
+We are running the command in Docker client. The Docker client sends the docker command to the Docker Daemon and the Docker Daemon now sees that if image is not available 
+locally. then It says in this repository with this tag, the image is not available locally. So what it's doing, it's going to the repository and fetching that image down 
+for us. So it'll fetch down the image and then run it as a container.
+So the Docker Daemon is responsible for managing our local containers, local images and also pulling images from the image repository/registry if something is not available 
+on our local. It's responsible for creating images and also pushing out images to the image registry so that somebody else can make use of them.
+One of the additional capabilities that Docker Daemon has is it can process instructions to create images as well.
+
+
+------------------------------------------------------------------------------------------------------
+Step 06 - Why is Docker Popular
+
+One of the most important things, is you should understand the big picture around why Docker is becoming famous. One of the things we saw, was installing Docker on our local 
+machine was very, very easy, so developers can use Docker easily. Now, what's happening these days, is most of our environments are deployed on the cloud. The awesome thing 
+about Docker is you can install Docker on cloud also very, very easily. Most of the cloud providers actually provide container based services. So they provide services where 
+you just need to tell, "Run this container," and it would automatically run on the cloud.
+
+Before Docker, virtual machines were very, very popular. You have the hardware, you have a host operating system installed on top of the hardware, and we had something called 
+the Hypervisor to manage your virtual machines. So each of these was a virtual machine, so you have virtual machine one, virtual machine two, virtual machine three. And each 
+virtual machine had a guest OS, and on top of it, you have the software that you'd want to install to run your application, and on top of it is your application. One of the 
+major problems with these virtual machine architecture, was typically these are heavy weight. We had two operating systems, host operating system and guest operating system, 
+and that makes the whole thing a little heavy. And that's where Docker comes in. If you have some infrastructure and if you have some host operating system installed on top of it, 
+all that you need to do is to install the Docker engine for that specific operating system and Docker would take care of managing these containers. The Docker image contains all 
+that is needed to run a container. All the libraries, all the software, are directly part of these containers. Because there is just one OS, the host OS, Docker is relatively 
+lightweight, and therefore it is very, very efficient. And that's why you would see that all the cloud providers provide a number of services around Docker.
+Today, It's very, very easy to deploy something related to Docker onto any of the cloud providers.
+Azure provides a service called Azure Container Service. AWS, Amazon Web Services, provides a service called Elastic Container Service. So the thing which we are understanding 
+right now, is the fact that using Docker on local is very easy and using Docker on the cloud is also very easy. And that's the reason why Docker is becoming really, really popular 
+during the last few years.
+
+
+------------------------------------------------------------------------------------------------------
+Step 07 - Playing with Docker Images
+
+docker images   = shows the docker images that are local to us. The images which have been pulled from the docker registry.
+REPOSITORY                     TAG               IMAGE ID         CREATED         SIZE
+in28min/todo-rest-api-h2       1.0.0.RELEASE     f8049a029560     2 months ago     143MB
+
+
+docker tag repository_name:existing_tag repository_name:new_tag    = Create new tag from the existing tag
+Ex: docker tag in28min/todo-rest-api-h2:1.0.0.RELEASE in28min/todo-rest-api-h2:latest
+
+
+docker pull image_name   = pulls/downloads the image from the registry to the local
+Ex: docker pull mysql
+
+
+docker run image_name   = docker run checks if the image available in the local, If it's not available in the local, then it pulls it and creates a container.
+
+
+docker search mysql   = search for any image which contains mysql.
+NAME    DESCRIPTION    STARS    OFFICIAL      AUTOMATED
+ 
+docker official images are a curated set of docker repositories. Basically, docker has a team which looks at these images make sure that
+they're meeting certain standards, and they publish all these content in the official images.
+
+
+docker image history image_id/repository name:tag    =  get all the history, all the steps that were involved in creating that specific image.
+
+docker image inspect image_id    =    It gives information related to the tags, containers which were created from it, some configuration related to that.
+
+docker image remove image_id  =  removes the image from the local
+
+
+
+------------------------------------------------------------------------------------------------------
+Step 08 - Playing with Docker Containers
+
+creating a container from the specific image and launch up the container in detach mode
+docker container run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+
+docker container pause container_id    = pauses/stops the container (we can't access the API of this container when it is paused)
+
+
+docker container unpause container_id    = Unpause all processes within one or more containers
+
+
+docker container inspect container_id   = Gives details about that specific container like the container when it is created, current status, 
+image details, platform, default bindings, volumes, etc
+
+
+docker container prune   = This removes all the stopped containers
+
+stop => SIGTERM  => gracefull shutdown
+docker container stop container_id   =   It's shut down the executor service, closes the entity manager factory, drops the table sequences and shuts down the connection pool. 
+The container was given some time to finish its processes to shutdown gracefully. In technical terms, when I do a container stop, the signal which is sent to the container is something 
+called sigterm. It means take about 10 seconds and make sure that you gracefully complete your execution.
+
+
+docker container kill container_id   = The container stopped as it is. It won't really given time to do anything. 
+In technical terms, what happens is a signal called sigkill is sent out to the container and it immediately stops.
+
+The command which you should use most of the times. Actually, 99.99% of the times is docker container stop. You'd want to give your container time to shutdown gracefully.
+
+
+Restart policy: 
+Two of the most popular values for restart policy are always and no. The default restart policy is no.
+
+docker container run -p 5000:5000 -d --restart=always in28min/todo-rest-api-h2:1.0.0.RELEASE
+
+Whenever we restart the Docker Desktop and the Docker Daemon restarts, it sees if there are any container with the restart policy of always.
+If there are any, it would launch them up.
+The restart policy is very useful, especially if you have things like databases which you would want to keep them always running. You can set a restart policy of always. And even if the Docker daemon restarts by accident at the start of the Docker daemon, 
+that specific container would be always launched up.
+
+
+------------------------------------------------------------------------------------------------------
+Step 09 - Playing with Docker Commands - stats, system
+
+docker events   =  Used to monitor the events which are happening with the Docker engine or the Docker daemon.
+
+docker top container_id = Used to check what is the top process, which is running in a specific container.
+PID   USER   TIME    COMMAND
+
+docker stats =  Shows all the statistics regarding the containers which are running.
+How much amount of cpu is it making use of? How much memory is it making use of? memory percentage.
+
+
+We can set memory and CPU limits for the containers.
+docker run -p 5000:5000 -m 512m --cpu-quota 5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+-m  = memory , here 512m is 512MB 
+--cpu-quota = CPU quota , here 5000 is 5 % of CPU
+
+
+docker system df    = It helps us to look at what are the different resources that the Docker daemon manages and how much size each one of them have.
+Docker daemon manages your images, your containers.
+
+
+------------------------------------------------------------------------------------------------------
+Step 10 - Introduction to Distributed Tracing
+Step 11 - Launching Zipkin Container using Docker
+
+
+docker run -p 9411:9411 openzipkin/zipkin:2.23   = Launch Zipkin as a docker container
+
+http://localhost:9411/zipkin
+
+------------------------------------------------------------------------------------------------------
+ Step 12 00 - Getting Started with Observability and OpenTelemetry
+ 
+Monitoring is all about looking at metrics, logs, traces.  Monitoring is reactive. You're looking at what has happened.
+Observability, on the other hand, is proactive.
+Observability focuses on, how well do we understand what's happening in a system? This step one in observability is gathering data: metrics, logs, or traces.
+But the most important step in observability is to get the intelligence. There are a lot of resources out there these days. You have AI, ML, and a lot of things that you 
+can make use of to get intelligence to detect if something wrong is happening in your system. So observability is one step about monitoring. 
+Gathering data is what monitoring focuses on. So monitoring is actually a subset of observability. In monitoring, we try and get metrics, logs, and traces.
+And in observability, we focus on getting intelligence from this data, and hopefully this intelligence would help us to detect problems faster.
+
+
+
+What is OpenTelemetry?
+All applications have metrics, logs, and traces. If you go a few years back, there are different standards, different tools, different APIs, different SDKs for 
+each of metrics, logs, and traces.
+The question is, why do we need to have a separate standard for each one of these? One standard for metrics, one standard for logs, one standard for traces. 
+There were a lot of initiatives around consolidating metrics, logs, and traces into a single standard.
+And one of the most important results from those initiatives is OpenTelemetry. It's a collection of tools, APIs, and SDKs to instrument, generate, collect, and export telemetry data, 
+so things like metrics, logs, traces. Instead of having different standards for different things, why not have just one standard for all the things related to gathering data and gathering your 
+telemetry data? That's where OpenTelemetry comes into picture. Today, almost every cloud platform out there, AWS Azure, Google Cloud, provides support for telemetry in one form or the other.
+ 
+ 
+------------------------------------------------------------------------------------------------------
+
+Step 12 : Distributed Tracing - Zipkin  
+https://github.com/in28minutes/spring-microservices-v3/blob/main/v3-upgrade.md
+
+Let's consider a simple scenario.
+A request is flowing through multiple microservices and it is taking a lot of time. You want to find out how much time the request is spending in each microservice and 
+you want to find out which microservice is consuming the most amount of time. That's where something called distributed tracing is useful. It helps you to trace a request 
+across microservices. You'd be able to find out details about the request and you'll also be able to find out how much time the request is spending in each of these 
+microservices, and one of the most popular tools to implement distributed tracing is something called Zipkin.
+The way distributed tracing would work is that each of the microservices would send the tracing information out to the distributed server and the distributed tracing server 
+would have all that information stored in a database and would provide a UI, and you can query against the UI and find information about the requests which are executed.
+
+
+Now, why are there changes between Spring Boot 2 and Spring Boot 3?
+Thing is, in Spring Boot 2, for tracing configuration,
+basically, you'd want to be able to configure what kind of requests you'd want to trace, how many requests you want to trace. Do you want to trace every request? All that is 
+called tracing configuration, and in Spring Boot 2, the recommended approach to do that was to use something called Spring Cloud Sleuth. This would send the information to the 
+tracer library, which is Brave, and from Brave, we would send the information out to Zipkin.
+However, in Spring Boot 3, the recommendation is to use Micrometer. Sleuth can only handle traces. However, Micrometer can handle logs, metrics, and traces as well. 
+Micrometer is a vendor-neutral application observability facade. It can instrument your JVM-based application code without vendor lock-in. The great thing about Micrometer 
+is that it can handle observations, basically metrics and logs, and traces as well, and instead of Brave, what we'd be using in Spring Boot 3 is OpenTelemetry. OpenTelemetry is, 
+again, an open standard for metrics, logs, and tracing. So, what we are doing is we are moving from trace-specific configuration, which was used in Spring Boot 2, to open standards. 
+We want to have the same things, like Micrometer, OpenTelemetry, which are common for tracing, logging, and metrics as well.
+
+That's why, in Spring Boot 3, we are switching over to Micrometer and OpenTelemetry.
+
+Spring Boot 2:      Sleuth (Tracing Configuration) 
+                  > Brave (Tracer library) 
+                  > Zipkin
+            
+Spring Boot3 :  Micrometer 
+              > OpenTelemetry 
+              > Zipkin 
+
+Micrometer - Vendor-neutral application observability facade.  
+Instrument your JVM-based application code without vendor lock-in.  
+    Observation (Metrics & Logs) + Tracing.
+    
+Open Telemetry  - Simplified Observability (metrics, logs, and traces)    
+       
+            
+Sampling: 
+If you trace all the requests which are coming into all the microservices, there will be a big performance impact and that's why you can configure how much percentage of the 
+request you'd want to sample. Configure it in application.properties file.
+
+
+
+------------------------------------------------------------------------------------------------------
+ Step 13:
+ feign micrometer - Integrate Micrometer for Feign Requests
+ 
+ 
+------------------------------------------------------------------------------------------------------
+ Spring Boot 3.0+ - https://github.com/in28minutes/spring-microservices-v3/tree/main/04.docker
+Create the docker image of any microservice:
+
+First add the docker image configuration in pom.xml and then run the below command.
+spring-boot:build-image -DskipTests   =  To create a image of the project 
+use this command in Run as configuration  
+
+
+To create the Docker image, the spring-boot-maven-plugin makes use of a lot of Docker images. And for these Docker images,
+we would want to configure a pullPolicy of IF_NOT_PRESENT. The default pullPolicy is ALWAYS.
+Whenever you build a container image, Spring Boot would fetch the base images and build the image for your specific project. And all these base images which are needed,
+spring-boot-maven-plugin, by default, would get them from the Docker Registry.
+However, what I'm configuring in here is to make it a little bit more efficient. What I'm saying is only if the images are not present locally, go and pull them.
+Otherwise, use the images, which are present locally. So IF_NOT_PRESENT.
+
+
+------------------------------------------------------------------------------------------------------
+ Step 16 - Getting Started with Docker Compose - Currency Exchange Microservice
+ 
+ In Last Step, we launched up the currency exchange service, and we would want to launch up a lot more containers. So we want to create containers for all the microservices 
+ that we have in here. And also we want to launch up Zipkin and RabbitMQ. Launching up each one of these with commands, like we executed until now, is not going to be a easy 
+ thing and that's the reason why we go for something called Docker Compose.
+
+Docker Compose is a tool for defining and running multi container Docker applications. You can simply configure a YAML file, and with a single command you can launch up all 
+these services which are defined inside the YAML file.
+
+ 
+ 
+ 
