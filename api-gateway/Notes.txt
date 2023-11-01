@@ -467,6 +467,229 @@ Otherwise, use the images, which are present locally. So IF_NOT_PRESENT.
 Docker Compose is a tool for defining and running multi container Docker applications. You can simply configure a YAML file, and with a single command you can launch up all 
 these services which are defined inside the YAML file.
 
+
+------------------------------------------------------------------------------------------------------
+ What is a Kubernetes cluster? 
+ A Kubernetes cluster is a set of nodes that run containerized applications. Containerizing applications packages an app with its dependences and some necessary services. 
+ They are more lightweight and flexible than virtual machines.
  
+ Master node- manages cluster
+ Worker node- run your applications
+ What is the difference between worker and master node in Kubernetes?
+The worker nodes are responsible for running the containers and doing any work assigned to them by the master node. 
+The master node looks after: scheduling and scaling applications. maintaining the state of the cluster.
+
+
+kubectl - kube controller
+
+If you go to hub.docker.com/u/in28min
+
+
+When we executed the command kubectl create deployment, Kubernetes created a deployment, a replica set, and a pod.
+When we executed the command kubectl exposed deployment, Kubernetes created a service for us.
+
+Commands executed in this section:
+
+https://github.com/in28minutes/spring-microservices-v2/tree/main/05.kubernetes#commands
+
+
+
+docker run -p 8080:8080 in28min/hello-world-rest-api:0.0.1.RELEASE
  
+Deploy application to kubernetes cluster and gives the deployment id
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+
+Expose a service/application to the outside world
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl delete pod hello-world-rest-api-58ff5dd898-62l9d
+kubectl autoscale deployment hello-world-rest-api --max=10 --cpu-percent=70
+kubectl edit deployment hello-world-rest-api #minReadySeconds: 15
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
  
+gcloud container clusters get-credentials in28minutes-cluster --zone us-central1-a --project solid-course-258105
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get componentstatuses
+kubectl get pods --all-namespaces
+ 
+kubectl get events
+kubectl get pods
+kubectl get replicaset
+kubectl get deployment
+kubectl get service
+ 
+
+kubectl get replicasets
+kubectl get replicaset
+ 
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl get pods
+kubectl get replicaset
+kubectl get events
+kubectl get events --sort.by=.metadata.creationTimestamp
+ 
+kubectl get rs
+kubectl get rs -o wide
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+kubectl get rs -o wide
+kubectl get pods
+kubectl describe pod hello-world-rest-api-85995ddd5c-msjsm
+kubectl get events --sort-by=.metadata.creationTimestamp
+ 
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-n6c7l
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-8bhdt
+ 
+gcloud container clusters get-credentials in28minutes-cluster --zone us-central1-c --project solid-course-258105
+docker login
+docker push in28min/mmv2-currency-exchange-service:0.0.11-SNAPSHOT
+docker push in28min/mmv2-currency-conversion-service:0.0.11-SNAPSHOT
+ 
+kubectl create deployment currency-exchange --image=in28min/mmv2-currency-exchange-service:0.0.11-SNAPSHOT
+kubectl expose deployment currency-exchange --type=LoadBalancer --port=8000
+kubectl get svc
+kubectl get services
+kubectl get pods
+kubectl get po
+kubectl get replicaset
+kubectl get rs
+kubectl get all
+ 
+kubectl create deployment currency-conversion --image=in28min/mmv2-currency-conversion-service:0.0.11-SNAPSHOT
+kubectl expose deployment currency-conversion --type=LoadBalancer --port=8100
+ 
+kubectl get svc --watch
+ 
+kubectl get deployments
+ 
+kubectl get deployment currency-exchange -o yaml >> deployment.yaml 
+kubectl get service currency-exchange -o yaml >> service.yaml 
+ 
+kubectl diff -f deployment.yaml
+kubectl apply -f deployment.yaml
+ 
+kubectl delete all -l app=currency-exchange
+kubectl delete all -l app=currency-conversion
+ 
+kubectl rollout history deployment currency-conversion
+kubectl rollout history deployment currency-exchange
+kubectl rollout undo deployment currency-exchange --to-revision=1
+ 
+kubectl logs currency-exchange-9fc6f979b-2gmn8
+kubectl logs -f currency-exchange-9fc6f979b-2gmn8 
+ 
+kubectl autoscale deployment currency-exchange --min=1 --max=3 --cpu-percent=5 
+kubectl get hpa
+ 
+kubectl top pod
+kubectl top nodes
+kubectl get hpa
+kubectl delete hpa currency-exchange
+ 
+kubectl create configmap currency-conversion --from-literal=CURRENCY_EXCHANGE_URI=http://currency-exchange
+kubectl get configmap
+ 
+kubectl get configmap currency-conversion -o yaml >> configmap.yaml
+ 
+watch -n 0.1 curl http://34.66.241.150:8100/currency-conversion-feign/from/USD/to/INR/quantity/10
+ 
+docker push in28min/mmv2-currency-conversion-service:0.0.12-SNAPSHOT
+docker push in28min/mmv2-currency-exchange-service:0.0.12-SNAPSHOT
+
+
+------------------------------------------------------------------------------------------------------
+Step 07 - Understanding Pods in Kubernetes
+ 
+Pods is the most important concept in Kubernetes. A pod is the smallest deployable unit in Kubernetes. You might think containers are the smallest 
+deployable unit, but no, in Kubernetes the smallest deployment unit is actually the pod. Let's consider a question. I want to create a container in 
+Kubernetes. Can you do it without a pod? The answer is no. You cannot have a container in Kubernetes without a pod. Your container lives inside a pod.
+
+Each pod has a unique IP address. A pod can actually contain multiple containers. All the containers which are present in a pod share resources within 
+the same pod, the containers can talk to each other using local host. A pod in Kubernetes is a collection of containers.
+So a pod can contain multiple containers that can run on a host, that can run on a single node.
+
+
+
+Namespace is a very important concept, it provides isolations for parts of the cluster from other parts of the cluster.
+What do I mean? Let's say you have your development and QA environments running inside the same cluster. How do you separate the resources of DEV from 
+the resources of QA? One of the options is to create separate namespaces for QA and DEV, and associate each of the resources with that specific namespace.
+
+
+The important thing that you need to remember about pod is a pod provides a way to put your containers together,
+it gives them an IP address, and also it provides a categorization for all these containers by associating them with labels.
+On any Kubernetes nodes there can be multiple pods, and each of these pods can contain multiple containers that are running as part of them.
+
+kubectl get pods
+kubectl get pods -o wide
+kubectl explain pods
+kubectl describe pod hello-world-rest-api-58ff5dd898-9trh2
+ 
+------------------------------------------------------------------------------------------------------
+Step 08 - Understanding ReplicaSets in Kubernetes
+
+kubectl get replicasets
+kubectl get replicaset
+kubectl get rs
+kubectl get pods -o wide
+kubectl delete pods hello-world-rest-api-58ff5dd898-9trh2
+kubectl get pods -o wide
+
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl get events
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl explain replicaset
+
+
+Replica sets ensure that a specific number of pods are running at all times. The replica set always keeps monitoring the pods
+and if there are lesser number of pods than what is needed then it creates the pods. We said we would want one pod running all time and when it goes down to zero, 
+immediately the replica set looks at it and says, okay, there is one pod missing I'll need to start it up and it kicks off a new pod.
+So in kubernetes, whenever somebody talks about replica set to you, it's all about maintaining the number of pods. So a pod is where your containers run. A pod provides 
+a grouping for the containers and a replica set ensures that a set of pods, a specified number of pods are always running.
+
+
+------------------------------------------------------------------------------------------------------
+Step 09 - Understanding Deployment in Kubernetes
+
+Why do we need a deployment? Now, let's say I have a specific version of application deployed.
+Let's call it V1. And let's say we would want to update to a new version, let's say V2. Typically, what do we want when we are updating applications? We would want zero downtime.
+
+kubectl set image deployment deployment_name container_name
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+
+
+kubectl get rs
+NAME     DESIRED     CURRENT    READY    AGE
+
+kubectl get rs -o wide
+NAME     DESIRED     CURRENT    READY    AGE   CONTAINERS    IMAGES     SELECTOR
+
+kubectl set image deployment deployment_name container_name
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+
+kubectl get rs -o wide
+kubectl get pods
+kubectl describe pod hello-world-rest-api-85995ddd5c-msjsm
+kubectl get events --sort-by=.metadata.creationTimestamp
+
+kubectl set image deployment deployment_name container_name=repository_name/image_name:tag
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+
+
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-n6c7l
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-8bhdt
+
+
+
+
