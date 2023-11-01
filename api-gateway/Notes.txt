@@ -660,11 +660,8 @@ a grouping for the containers and a replica set ensures that a set of pods, a sp
 Step 09 - Understanding Deployment in Kubernetes
 
 Why do we need a deployment? Now, let's say I have a specific version of application deployed.
-Let's call it V1. And let's say we would want to update to a new version, let's say V2. Typically, what do we want when we are updating applications? We would want zero downtime.
-
-kubectl set image deployment deployment_name container_name
-kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
-
+Let's call it V1. And let's say we would want to update to a new version, let's say V2. Typically, what do we want when we are updating applications?
+We would want zero downtime.
 
 kubectl get rs
 NAME     DESIRED     CURRENT    READY    AGE
@@ -683,12 +680,58 @@ kubectl get events --sort-by=.metadata.creationTimestamp
 kubectl set image deployment deployment_name container_name=repository_name/image_name:tag
 kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
 
-
 kubectl get events --sort-by=.metadata.creationTimestamp
+
+
+A deployment is very, very important to make sure that you are able to update new releases of applications without downtime. The strategy which the deployment 
+is using by default is something called rolling updates. What it does is, let's say I have five instances of V1, and I want to update to V2, the rolling update 
+strategy, it updates one pod at a time. So it launches a new pod for V2. Once it's up and running, it reduces the number of pods for V1. Next, it increases the 
+number of pods for V2, and so on and so forth until the number of pods for V1 becomes zero and all the traffic goes then to V2.
+
+------------------------------------------------------------------------------------------------------
+206. Step 10 - Quick Review of Kubernetes Concepts - Pods, Replica Sets & Deployments
+
+
+A pod is nothing but a wrapper for a set of containers. A pod has an IP address and it has things like labels, annotations and stuff like that.
+
+Now, why do we need a replica set? A replica set ensures that a specific number of pods are always running.
+So if you say replica set three instances, then it ensures that three instances of the pods are always running.Even if you kill one of the instances of the pod, 
+replica set would observe that and it would bring up a new instance of the pod.
+In practice, you'd see that a replica set is always tied with a specific release version. So, you'll have a replica set, V1 and that would be maintaining a specified 
+number of instances of the V1 release. So a replica set V1 is responsible for making sure that that specified number of instances of version one of the application 
+are always running.
+
+Why do we need a deployment?
+A deployment ensures that a release upgrade, a switch from V one to V two happens without a hitch. You don't really want to have down times when you release new versions 
+of applications and that's where deployment plays a key role. There are a variety of deployment strategies. When I'm releasing a new version of the application, I might want 
+to actually send 50% of traffic to V one and 50% of traffic to V two. Or, I would want actually do something like a rolling update where I want to first create one instance of V two, 
+test it, once it's fine, I would reduce the number of instances of V one. After that, I'll create a new instance of V two. Once it's up and running, I'll reduce the number of instances 
+of V one. And so on and so forth until the number of instances of V one gets reduced to zero. The default deployment strategy is rolling updates.
+
+
+------------------------------------------------------------------------------------------------------
+207. Step 11 - Understanding Services in Kubernetes
+
 kubectl get pods -o wide
+
+kubectl delete pod pod_name
 kubectl delete pod hello-world-rest-api-67c79fd44f-n6c7l
+
 kubectl get pods -o wide
 kubectl delete pod hello-world-rest-api-67c79fd44f-8bhdt
+
+
+
+In the Kubernetes world, a pod is a throwaway unit. Your pods might go down, new pods might come up. Whenever I do a new release, there might be several new pods which are created, 
+and the old pods completely go away, irrespective of all the changes happening with the pods. We don't want the consumer side of things to get affected. We don't want the user of 
+the application to use a different URL. That's the role of a service. The role of a service is to provide an always available external interface to the applications which are running 
+inside the pods. A service basically allows your application to receive traffic through a permanent lifetime IP address. Now, when was this service created?
+This service was created when we did an exposed deployment. Earlier in the course, we executed kubectl expose deployment hello world rest API hyphen hyphen type is equal to load balancer 
+hyphen hyphen port is equal to 80 80. This is when the service was created with an IP address and that's the IP address that we are using to access the application.
+
+A load balancer can load balance between multiple pods. 
+cluster IP service mean? A cluster IP service can only be accessed from inside the cluster. You won't be able to access this service from outside the cluster. cluster IP service doesn't 
+have external IP for any specific service. So, if you have any services which are directly consumed inside your cluster, you can have them use a cluster IP.
 
 
 
