@@ -553,7 +553,9 @@ gcloud container clusters get-credentials in28minutes-cluster --zone us-central1
 docker login
 docker push in28min/mmv2-currency-exchange-service:0.0.11-SNAPSHOT
 docker push in28min/mmv2-currency-conversion-service:0.0.11-SNAPSHOT
- 
+
+
+215. Step 16 - Deploy Microservices to Kubernetes & Understand Service Discovery
 kubectl create deployment currency-exchange --image=in28min/mmv2-currency-exchange-service:0.0.11-SNAPSHOT
 kubectl expose deployment currency-exchange --type=LoadBalancer --port=8000
 kubectl get svc
@@ -568,18 +570,37 @@ kubectl create deployment currency-conversion --image=in28min/mmv2-currency-conv
 kubectl expose deployment currency-conversion --type=LoadBalancer --port=8100
  
 kubectl get svc --watch
- 
+
+
+216. Step 17 - Creating Declarative Configuration Kubernetes YAML for Microservices
+
 kubectl get deployments
- 
+kubectl get deployment currency-exchange -o yaml
 kubectl get deployment currency-exchange -o yaml >> deployment.yaml 
 kubectl get service currency-exchange -o yaml >> service.yaml 
  
+219. Step 20 - Deploying Microservices using Kubernetes YAML Configuration
+
 kubectl diff -f deployment.yaml
 kubectl apply -f deployment.yaml
  
 kubectl delete all -l app=currency-exchange
 kubectl delete all -l app=currency-conversion
- 
+
+221. Step 22 - Creating Environment Variables to enable Microservice Communication
+
+docker push in28min/mmv2-currency-conversion-service:0.0.12-SNAPSHOT
+docker push in28min/mmv2-currency-exchange-service:0.0.12-SNAPSHOT
+
+
+222. Step 23 - Understanding Centralized Configuration in Kubernetes - Config Maps
+
+kubectl create configmap currency-conversion --from-literal=CURRENCY_EXCHANGE_URI=http://currency-exchange
+kubectl get configmap
+kubectl get configmap currency-conversion
+kubectl get configmap currency-conversion -o yaml >> configmap.yaml
+
+
 kubectl rollout history deployment currency-conversion
 kubectl rollout history deployment currency-exchange
 kubectl rollout undo deployment currency-exchange --to-revision=1
@@ -587,6 +608,8 @@ kubectl rollout undo deployment currency-exchange --to-revision=1
 kubectl logs currency-exchange-9fc6f979b-2gmn8
 kubectl logs -f currency-exchange-9fc6f979b-2gmn8 
  
+Step 27 - Autoscaling Microservices with Kubernetes
+
 kubectl autoscale deployment currency-exchange --min=1 --max=3 --cpu-percent=5 
 kubectl get hpa
  
@@ -734,5 +757,58 @@ cluster IP service mean? A cluster IP service can only be accessed from inside t
 have external IP for any specific service. So, if you have any services which are directly consumed inside your cluster, you can have them use a cluster IP.
 
 
+------------------------------------------------------------------------------------------------------
+209. Step 13 - Understanding Kubernetes Architecture - Master Node and Nodes
 
 
+What are the important components that are running as part of your Master Node?
+The most important component that is running as part of your Master Node is something called ETCD. That's the distributed database, E-T-C-D. All the configuration 
+changes that we are making, all the deployments that we are creating, all the scaling operations that we are performing, all the details of those are stored in a 
+Distributed Database. What we are doing when we are executing those commands is setting the desired state for Kubernetes. We are telling Kubernetes I would want five 
+instances of application A, I would want 10 instances of application B. That's what is called desired state and the desired state is stored in the Distributed Database, 
+E-T-C-D. So, all the Kubernetes resources like deployment, services, all the configuration that we make is stored finally into this Distributed Database. The great thing
+about this database is that it is distributed. Typically, we would recommend you to have about three to five replicas of this database so that the Kubernetes cluster 
+state is not lost. 
+
+The second important component inside the Master Node is something called the API Server (kube-apiserver). Earlier we were executing commands from Kubectl. We were making
+changes from the Google Cloud console from the interface provided by Google Cloud. How does kubectl talk to Kubernetes cluster? How does the Google Cloud interface or the
+Google Cloud console talk to the Kubernetes cluster? The way they make their changes is through the API server. If I try to make a change through kubectl or if I try to 
+make a change to the Google Cloud console, the change is submitted to this API server and processed from here. 
+
+The other two important components which are present in here are the Scheduler and the Controller Manager. 
+The scheduler is responsible for scheduling the pods onto the Nodes. In a Kubernetes cluster, you'll have several Nodes and when we are creating a new pod, you need to 
+decide which Node the pod has to be scheduled on to. The decision might be based on how much memories available and how much CPU is available. Are there any pod conflicts
+and a lot of such factors? So, Scheduler considers all those factors and schedules the pods onto the appropriate Nodes. 
+
+The Controller Manager manages the overall health of the cluster. Wherever we are executing kubectl commands, we are updating the desired state. The kubectl manager makes
+sure that whatever desired state that we have, we would want 10 instances of application A, we would want 10 instances of application B, we would want five instances of 
+release 2. All those changes needs to be executed into the cluster and the Controller Manager is responsible for that. It makes sure that the actual state of the Kubernetes
+cluster matches the desired state. 
+The important thing about a Master Node, is typically the user applications like our Hello World rests API will not be scheduled onto the Master Node. All the user applications 
+would be running typically in PODS inside the Worker Nodes or just the Node. So, one of the important components of the Node is the applications that we would want to run 
+the hello World REST API of web application or things like that. Where would they all be running? They'll be running inside PODS on a single Node you might have several 
+PODS running. 
+Now what are the other components which are present on the Node? The other components which are present on the Node are number one, is a Node Agent. It's called a Kubelet. 
+K-U-B-E-L-E-T. What is the job of a kubelet? The job of a kubelet is to make sure that it monitors what's happening on the Node and communicates it back to the Master Node. 
+So, if a pod goes down, what does the Node Agent do? It reports it to the Controller Manager. 
+The other component which is present in here is a Networking Component called the kube-proxy.
+Earlier we created a deployment and we exposed the deployment as a service. How is that possible? That is possible through the Networking Component. It helps you in exposing 
+services around your Nodes and your PODS. 
+The other important component of the Worker Node is the Container Runtime. You want to run containers inside our PODS and these need the Container Runtime. The most frequently 
+used Container Runtime is Docker. Actually, you can use Kubernetes with any O-C-I Open Container Interface, Runtime spec implementations. So, we talked a lot about what 
+is present on the Master Node and what is present on the Node or the Worker Nodes. Before we end this specific section
+let's discuss a few important questions. 
+The first question we already talked about does a Master Node run any of the application related containers? Does it run Hello 
+world REST API and things like that? The answer to this is, no. The Master Node is typically having only this stuff which is related to what is needed to control your 
+Worker Nodes or the Nodes. 
+Now, the second question is, can you only run docker containers in Kubernetes? The answer to that is, no. We already talked about this as well, right? If your container 
+is compatible with O-C-I Open Container Interface, that's fine. You can run those containers in Kubernetes.
+Let's get to the third question which is a very interesting one. What happens if the Master Node goes down or what happens if a specific service on a Master Node goes 
+down? Will the applications go down? The answer to that is, no. The applications can continue to run working even with the Master Node down. When I'm executing a URL 
+to access an application the Master Node does not get involved at all. The only thing that would be involved in those kind of situations are just the Worker Nodes, the 
+Nodes which are doing the work. So, even if the Master Node goes down or the API Server goes down our applications would continue to be working. You'll not be able to 
+make changes to them but the existing applications would continue to run. 
+
+kubectl get componentstatuses.
+ 
+------------------------------------------------------------------------------------------------------
